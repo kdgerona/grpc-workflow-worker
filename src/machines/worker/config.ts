@@ -1,4 +1,7 @@
-const config = {
+import { MachineConfig } from 'xstate'
+import { IWorkerContext, IWorkerSchema, IWorkerEvents} from './interfaces'
+
+const config: MachineConfig<IWorkerContext, IWorkerSchema, IWorkerEvents> = {
     id: 'worker',
     initial: 'start',
     states: {

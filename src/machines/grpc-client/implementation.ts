@@ -1,35 +1,34 @@
 import { MachineOptions, actions, assign, sendParent } from 'xstate'
 import { loadPackageDefinition, credentials } from 'grpc'
 import { loadSync } from '@grpc/proto-loader'
-import { rejects } from 'assert'
-import { type } from 'os'
+import { IGrpcClientContext } from './interfaces'
 const { log } = actions
 
-const implementation: MachineOptions<any, any> = {
+const implementation: MachineOptions<IGrpcClientContext, any> = {
     actions: {
         logInitializingClient: log('*** GRPC Client Initializing ***'),
         logClientInitialized: log('*** GRPC Client Initialized ***'),
-        logClientInitializationError: log((_: any, event: any) => event.data),
+        logClientInitializationError: log((_, event: any) => event.data),
         assignGrpcClientInstance: assign({
-            grpc_client: (_: any, { data }: any) => data
+            grpc_client: (_, { data }: any) => data
         }),
         incrementRetryCount: assign({
-            retry_count: (context: any) => context.retry_count + 1
+            retry_count: (context) => context.retry_count + 1
         }),
-        resetRetryCount: assign({
+        resetRetryCount: assign<IGrpcClientContext>({
             retry_count: 0
         }),
         logClientStartError: log(`*** GRPC Client Start Error ***`),
-        retryingLog: log((context: any) => `*** Retrying GRPC Client ${context.retry_count}/${context.max_retry_count} ***`),
-        sendToParent: sendParent((_:any, { payload }: any) => ({
+        retryingLog: log((context) => `*** Retrying GRPC Client ${context.retry_count}/${context.max_retry_count} ***`),
+        sendToParent: sendParent((_, { payload }: any) => ({
             type: 'RECEIVED_DATA',
             payload
         })),
-        logClientStreamError: log((_:any, { error }: any) => error),
+        logClientStreamError: log((_, { error }: any) => error),
         logStreamEnded: log('*** STREAM ENDED ***')
     },
     services: {
-        initializeClient: (context: any) => async () => {
+        initializeClient: (context) => async () => {
             const { host, port, proto_path, client_wait_time_ms } = context
 
             const packageDefinition = loadSync(
@@ -63,8 +62,8 @@ const implementation: MachineOptions<any, any> = {
 
             return stream
         },
-        startClientService: ({ grpc_client }: any) => (send) => {
-            grpc_client.on('data', (payload: any) => {
+        startClientService: ({ grpc_client }) => (send) => {
+            grpc_client!.on('data', (payload: any) => {
                 console.log('Data: ', payload)
                 send({
                     type: 'SEND_DATA_TO_PARENT',
@@ -72,7 +71,7 @@ const implementation: MachineOptions<any, any> = {
                 })
             })
 
-            grpc_client.on('error', (error: any) => {
+            grpc_client!.on('error', (error: any) => {
                 console.log('Error: ', error)
                 send({
                     type: 'CLIENT_STREAM_ERROR',
@@ -80,7 +79,7 @@ const implementation: MachineOptions<any, any> = {
                 })
             })
 
-            grpc_client.on('end', () => {
+            grpc_client!.on('end', () => {
                 send('STREAM_ENDED')
             })
         }

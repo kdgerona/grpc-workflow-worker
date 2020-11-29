@@ -1,6 +1,7 @@
 import { MachineConfig } from 'xstate'
+import { IGrpcClientContext, IGrpcClientSchema, IGrpcClientEvents} from './interfaces'
 
-const context = {
+const context: IGrpcClientContext = {
     host: process.env.HOST || 'localhost',
     port: +(process.env.PORT || 50051),
     proto_path: process.env.PROTO_PATH || `${__dirname}/protos/connection.proto`,
@@ -10,7 +11,7 @@ const context = {
     client_wait_time_ms: +(process.env.CLIENT_WAIT_TIME_MS || 5000),
 }
 
-const config: MachineConfig<any,any,any> = {
+const config: MachineConfig<IGrpcClientContext, IGrpcClientSchema, IGrpcClientEvents> = {
     id: 'grpc-client',
     initial: 'initialize',
     context,
