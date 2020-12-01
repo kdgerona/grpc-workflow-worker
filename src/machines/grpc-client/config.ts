@@ -45,7 +45,7 @@ const config: MachineConfig<IGrpcClientContext, IGrpcClientSchema, IGrpcClientEv
                 }
             ],
             on: {
-                SEND_DATA_TO_PARENT: {
+                SEND_MESSAGE_TO_PARENT: {
                     actions: ['sendToParent']
                 },
                 CLIENT_STREAM_ERROR: {
@@ -54,6 +54,9 @@ const config: MachineConfig<IGrpcClientContext, IGrpcClientSchema, IGrpcClientEv
                 },
                 STREAM_ENDED: {
                     actions: ['logStreamEnded']
+                },
+                STREAM_TO_SERVER: {
+                    actions: ['streamToServer']
                 }
             }
         },

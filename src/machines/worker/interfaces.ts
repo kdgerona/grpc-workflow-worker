@@ -1,4 +1,6 @@
-export interface IWorkerContext {}
+export interface IWorkerContext {
+    client_id?: string
+}
 
 export interface IWorkerSchema {
     states: {
@@ -9,4 +11,6 @@ export interface IWorkerSchema {
 export interface IWorkerEvents {
     type:
         | 'RECEIVED_DATA'
+        | 'CONNECTED'
+        | 'TASK'
 }

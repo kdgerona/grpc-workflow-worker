@@ -21,9 +21,10 @@ export interface IGrpcClientSchema {
 
 export interface IGrpcClientEvents {
     type: 
-        | 'SEND_DATA_TO_PARENT'
+        | 'SEND_MESSAGE_TO_PARENT'
         | 'CLIENT_STREAM_ERROR'
         | 'STREAM_ENDED'
+        | 'STREAM_TO_SERVER'
 }
 
 export interface IMessageEvent {

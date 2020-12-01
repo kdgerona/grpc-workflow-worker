@@ -25,7 +25,10 @@ const implementation: MachineOptions<IGrpcClientContext, any> = {
             payload
         })),
         logClientStreamError: log((_, { error }: any) => error),
-        logStreamEnded: log('*** STREAM ENDED ***')
+        logStreamEnded: log('*** STREAM ENDED ***'),
+        streamToServer: ({ grpc_client }, { payload }) => {
+            grpc_client?.write(payload)
+        }
     },
     services: {
         initializeClient: (context) => async () => {
@@ -66,7 +69,7 @@ const implementation: MachineOptions<IGrpcClientContext, any> = {
             grpc_client!.on('data', (payload: any) => {
                 console.log('Data: ', payload)
                 send({
-                    type: 'SEND_DATA_TO_PARENT',
+                    type: 'SEND_MESSAGE_TO_PARENT',
                     payload
                 })
             })
