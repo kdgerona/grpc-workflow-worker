@@ -2,7 +2,11 @@ import { MachineConfig } from 'xstate'
 import { IWorkerContext, IWorkerSchema, IWorkerEvents} from './interfaces'
 
 const context: IWorkerContext = {
-    client_id: undefined
+    client_id: undefined,
+    is_acknowledged: false,
+    spawn_id: '',
+    total_jobs_limit: 2,
+    total_jobs_taken: 0
 }
 
 const config: MachineConfig<IWorkerContext, IWorkerSchema, IWorkerEvents> = {
@@ -11,6 +15,7 @@ const config: MachineConfig<IWorkerContext, IWorkerSchema, IWorkerEvents> = {
     context,
     states: {
         start: {
+            entry: "assignAllExistingWorker",
             invoke: [
                 {
                     id: 'grpc-client',
@@ -20,15 +25,28 @@ const config: MachineConfig<IWorkerContext, IWorkerSchema, IWorkerEvents> = {
             on: {
                 RECEIVED_DATA: {
                     actions: [
-                        'logReceivedData',
+                        'eventLogs',
                         'sendReceivedEvent'
                     ]
                 },
                 CONNECTED: {
-                    actions: ['assignClientId']
+                    actions: [
+                        'assignClientId',
+                        'eventLogs',
+                        'notifyWorkflowWorkerReady'
+                    ]
                 },
                 TASK: {
-                    actions: ['taskReceived']
+                    actions: [
+                        'eventLogs',
+                        'initSpawnRef',
+                        'sendDataToSpawnWorker'
+                    ]
+                },
+                PRODUCE_MESSAGE_TO_DOMAIN: {
+                    actions: [
+                        "eventLogs"
+                    ]
                 }
             }
         }

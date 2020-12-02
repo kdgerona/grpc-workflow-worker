@@ -1,4 +1,4 @@
-import { MachineOptions, actions, assign, sendParent } from 'xstate'
+import { MachineOptions, actions, assign, sendParent, send } from 'xstate'
 import { loadPackageDefinition, credentials } from 'grpc'
 import { loadSync } from '@grpc/proto-loader'
 import { IGrpcClientContext } from './interfaces'
@@ -26,9 +26,7 @@ const implementation: MachineOptions<IGrpcClientContext, any> = {
         })),
         logClientStreamError: log((_, { error }: any) => error),
         logStreamEnded: log('*** STREAM ENDED ***'),
-        streamToServer: ({ grpc_client }, { payload }) => {
-            grpc_client?.write(payload)
-        }
+        streamToServer: ({ grpc_client }, { payload }) => grpc_client?.write(payload)
     },
     services: {
         initializeClient: (context) => async () => {

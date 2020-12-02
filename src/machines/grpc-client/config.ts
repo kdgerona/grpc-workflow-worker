@@ -1,4 +1,4 @@
-import { MachineConfig } from 'xstate'
+import { MachineConfig, sendParent } from 'xstate'
 import { IGrpcClientContext, IGrpcClientSchema, IGrpcClientEvents} from './interfaces'
 
 const context: IGrpcClientContext = {
@@ -56,7 +56,39 @@ const config: MachineConfig<IGrpcClientContext, IGrpcClientSchema, IGrpcClientEv
                     actions: ['logStreamEnded']
                 },
                 STREAM_TO_SERVER: {
-                    actions: ['streamToServer']
+                    actions: [
+                        'streamToServer',
+                        // testing
+                        sendParent({ type: 'TASK' , payload: {
+                            type: 'CREATE_USER',
+                            client_id: 'test-id',
+                            worker_id: 'test-worker-id',
+                            task_id: 'task-id-1',
+                            spawn_id: 'test-spawn-id-1',
+                            payload: {
+                                first_name: 'Test First name',
+                                last_name: 'Test Last name',
+                                email: 'test@gmail.com'
+                            }
+                        }})
+                    ]
+                }
+            },
+            // testing
+            after: {
+                5000: {
+                    actions: [
+                        sendParent({ type: 'TASK' , payload: {
+                            type: 'SEND_EMAIL',
+                            client_id: 'test-id',
+                            worker_id: 'test-worker-id',
+                            task_id: 'task-id-1',
+                            payload: {
+                                to: 'test@gmail.com',
+                                message: 'Thank you for your registration'
+                            }
+                        }})
+                    ]
                 }
             }
         },
