@@ -20,15 +20,21 @@ const config: MachineConfig<IWorkerContext, IWorkerSchema, IWorkerEvents> = {
             on: {
                 RECEIVED_DATA: {
                     actions: [
-                        'logReceivedData',
+                        // 'logReceivedData',
                         'sendReceivedEvent'
                     ]
                 },
                 CONNECTED: {
-                    actions: ['assignClientId']
+                    actions: [
+                        'assignClientId',
+                        'sendReady'
+                    ]
                 },
                 TASK: {
-                    actions: ['taskReceived']
+                    actions: [
+                        'taskReceived',
+                        'sendReadyDelay'
+                    ]
                 }
             }
         }

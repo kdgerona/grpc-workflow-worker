@@ -27,7 +27,9 @@ const implementation: MachineOptions<IGrpcClientContext, any> = {
         logClientStreamError: log((_, { error }: any) => error),
         logStreamEnded: log('*** STREAM ENDED ***'),
         streamToServer: ({ grpc_client }, { payload }) => {
-            grpc_client?.write(payload)
+            console.log(payload)
+            if(!grpc_client) return
+            grpc_client.write(payload)
         }
     },
     services: {
@@ -67,7 +69,7 @@ const implementation: MachineOptions<IGrpcClientContext, any> = {
         },
         startClientService: ({ grpc_client }) => (send) => {
             grpc_client!.on('data', (payload: any) => {
-                console.log('Data: ', payload)
+                // console.log('Data: ', payload)
                 send({
                     type: 'SEND_MESSAGE_TO_PARENT',
                     payload
