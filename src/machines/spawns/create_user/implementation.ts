@@ -42,51 +42,48 @@ const implementation: MachineOptions < IMachineContext, IMachineEvent > = {
                 ctx.payload
             ]
         })),
-        requestToProduceMessageGetUserByEmailToDomain: sendParent((ctx) => {
+        requestToProduceMessageGetUserByEmailToDomain: sendParent((ctx, { payload: evt_payload = {} }) => {
             const {
                 payload,
-                current_state,
                 topic
             } = ctx
             return {
                 type: "PRODUCE_MESSAGE_TO_DOMAIN",
-                current_state,
                 topic,
+                task_id: evt_payload.task_id,
                 payload: {
                     type: "GET_USER_BY_EMAIL",
-                    payload
+                    data: payload
                 }
             }
         }),
-        requestToProduceMessageCreateUserToDomain: sendParent((ctx) => {
+        requestToProduceMessageCreateUserToDomain: sendParent((ctx, { payload: evt_payload = {} }) => {
             const {
                 payload,
-                current_state,
                 topic
             } = ctx
             return {
                 type: "PRODUCE_MESSAGE_TO_DOMAIN",
                 topic,
+                task_id: evt_payload.task_id,
                 payload: {
                     type: "CREATE_USER",
-                    current_state,
-                    payload
+                    data: payload
                 }
             }
         }),
-        requestToProduceMessageSendEmailToDomain: sendParent((ctx) => {
+        requestToProduceMessageSendEmailToDomain: sendParent((ctx, { payload: evt_payload = {} }) => {
             const {
                 payload,
-                current_state,
                 topic
             } = ctx
             return {
                 type: "PRODUCE_MESSAGE_TO_DOMAIN",
                 topic,
+                task_id: evt_payload.task_id,
                 payload: {
                     type: "SEND_EMAIL",
-                    current_state,
-                    payload
+                    data: payload
                 }
             }
         }),

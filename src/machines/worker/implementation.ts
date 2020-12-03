@@ -15,12 +15,44 @@ const implementation: MachineOptions<IWorkerContext, any> = {
         //         type: "READY",
         //     }
         // }), { to: 'grpc-client' }),
-        workInProgress: send((_, event) => ({
-            type: "WORK_PROGRESS"
-        })),
-        acknowledgeTask: send((_, event) => ({
-            type: "TASK_ACK"
-        })),
+        produceMessage: send(({ client_id }, event) => ({
+            type: "STREAM_TO_SERVER",
+            payload: {
+                type: event.type,
+                client_id,
+                topic: event.topic,
+                task_id: event.task_id,
+                payload: {
+                    ...event.payload
+                }
+            }
+        }), { to: 'grpc-client' }),
+        // TODO
+        // add current_state in work PROGRESS
+        workInProgress: send(({ client_id }, { task_id }) => ({
+            type: "STREAM_TO_SERVER",
+            payload: {
+                type: "WORK_PROGRESS",
+                client_id,
+                task_id,
+                payload: {
+                    success: true,
+                    message: 'working'
+                }
+            }
+        }), { to: 'grpc-client' }),
+        acknowledgeTask: send(({ client_id }, { task_id }) => ({
+            type: "STREAM_TO_SERVER",
+            payload: {
+                type: "TASK_ACK",
+                client_id,
+                task_id,
+                payload: {
+                    success: true,
+                    message: 'task acknowledge'
+                }
+            }
+        }), { to: 'grpc-client' }),
         sendReceivedEvent: send((_, event) => ({
             ...event.payload
         })),
@@ -31,27 +63,25 @@ const implementation: MachineOptions<IWorkerContext, any> = {
         taskReceived: log('I received a task'),
         initSpawnRef: assign((context, event) => {
             const { client_id } = context
-            const { payload: { type } } = event
-            const spawn_id = `${client_id}-${uuid.v4()}`
+            const { payload: { type, task_id } } = event
+            const spawn_id = `${client_id}-${task_id}`
             const list_of_workers: any = workers
             const worker_key = type.toLowerCase()
             return {
                 ...context,
-                spawn_id,
                 [`${spawn_id}`]: spawn(list_of_workers[`${worker_key}`], spawn_id)
             }
         }),
-        sendDataToSpawnWorker: send(({ spawn_id }, event) => ({
+        sendDataToSpawnWorker: send(({ client_id }, event) => ({
             type: "START_WORK",
-            spawn_id,
+            client_id,
             payload: event.payload
-        }), { to: ({ spawn_id }) => spawn_id }),
-        sendResponseDataToSpawnWorker: send(({ spawn_id, client_id }, event) => ({
+        }), { to: ({ client_id }, { task_id }) => `${client_id}-${task_id}` }),
+        sendResponseDataToSpawnWorker: send(({ client_id }, event) => ({
             type: event.payload.type,
-            spawn_id,
             client_id,
             payload: event.payload.payload
-        }), { to: ({ spawn_id }) => spawn_id })
+        }), { to: ({ client_id }, { task_id }) => `${client_id}-${task_id}` })
     },
     services: {
         initGrpcClient: GrpcClient

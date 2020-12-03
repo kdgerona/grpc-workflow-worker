@@ -54,7 +54,8 @@ const config: MachineConfig<IWorkerContext, IWorkerSchema, IWorkerEvents> = {
                 },
                 PRODUCE_MESSAGE_TO_DOMAIN: {
                     actions: [
-                        "eventLogs"
+                        "eventLogs",
+                        "produceMessage"
                     ]
                 }
             }

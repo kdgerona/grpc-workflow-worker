@@ -26,7 +26,13 @@ const implementation: MachineOptions<IGrpcClientContext, any> = {
         logClientStreamError: log((_, { error }: any) => error),
         logStreamEnded: log('*** STREAM ENDED ***'),
         eventLogs:  log((_:any, event: any) => `${event.type} event logs: ${JSON.stringify(event, null, 4)}`),
-        streamToServer: ({ grpc_client }, { payload }) => grpc_client?.write(payload)
+        streamToServer: ({ grpc_client }, { payload }) => {
+            const stringfied_payload = {
+                ...payload,
+                payload: JSON.stringify(payload.payload)
+            }
+            grpc_client?.write(stringfied_payload)
+        }
     },
     services: {
         initializeClient: (context) => async () => {

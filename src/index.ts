@@ -3,7 +3,7 @@ import WorkerMachine from './machines/worker'
 
 const workerService = interpret(WorkerMachine)
 workerService.onTransition(({ value, event, context }) => {
-    console.log("@CURREN_EVENT: ", event);
+    // console.log("@CURREN_EVENT: ", event);
     // console.log("@CURREN_EVENT PAYLOAD: ", event.payload?.payload, typeof event.payload?.payload);
     const { client_id, spawn_id } = context
     // if (event.type === 'CONNECTED') {
