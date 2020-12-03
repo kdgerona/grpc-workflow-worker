@@ -30,8 +30,9 @@ const implementation: MachineOptions < IMachineContext, IMachineEvent > = {
             topic: 'EMAIL'
         })),
         saveDataToContext: assign((ctx, {
-            payload
-        }) => ({
+            payload,
+            task_id
+        }: any) => ({
             ...ctx,
             ...payload,
             prev_payload: {
@@ -40,17 +41,19 @@ const implementation: MachineOptions < IMachineContext, IMachineEvent > = {
             data_history: [
                 ...ctx.data_history,
                 ctx.payload
-            ]
+            ],
+            task_id
         })),
         requestToProduceMessageGetUserByEmailToDomain: sendParent((ctx, { payload: evt_payload = {} }) => {
             const {
                 payload,
-                topic
+                topic,
+                task_id
             } = ctx
             return {
                 type: "PRODUCE_MESSAGE_TO_DOMAIN",
                 topic,
-                task_id: evt_payload.task_id,
+                task_id,
                 payload: {
                     type: "GET_USER_BY_EMAIL",
                     data: payload
@@ -60,12 +63,13 @@ const implementation: MachineOptions < IMachineContext, IMachineEvent > = {
         requestToProduceMessageCreateUserToDomain: sendParent((ctx, { payload: evt_payload = {} }) => {
             const {
                 payload,
-                topic
+                topic,
+                task_id
             } = ctx
             return {
                 type: "PRODUCE_MESSAGE_TO_DOMAIN",
                 topic,
-                task_id: evt_payload.task_id,
+                task_id,
                 payload: {
                     type: "CREATE_USER",
                     data: payload
@@ -75,12 +79,13 @@ const implementation: MachineOptions < IMachineContext, IMachineEvent > = {
         requestToProduceMessageSendEmailToDomain: sendParent((ctx, { payload: evt_payload = {} }) => {
             const {
                 payload,
-                topic
+                topic,
+                task_id
             } = ctx
             return {
                 type: "PRODUCE_MESSAGE_TO_DOMAIN",
                 topic,
-                task_id: evt_payload.task_id,
+                task_id,
                 payload: {
                     type: "SEND_EMAIL",
                     data: payload

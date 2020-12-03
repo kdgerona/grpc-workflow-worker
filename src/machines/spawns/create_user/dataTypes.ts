@@ -14,7 +14,8 @@ interface IMachineContext {
     prev_payload: IPayload,
     data_history: Array<object>,
     current_state: string,
-    topic: string
+    topic: string,
+    task_id?: string
 }
 
 interface IMachineSchema {

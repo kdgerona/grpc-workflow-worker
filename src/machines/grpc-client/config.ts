@@ -5,7 +5,7 @@ const context: IGrpcClientContext = {
     host: process.env.HOST || 'localhost' || '10.111.2.100',
     port: +(process.env.PORT || 50051),
     proto_path: process.env.PROTO_PATH || `${__dirname}/protos/connection.proto`,
-    max_retry_count: +(process.env.RETRY_COUNT || 5),
+    max_retry_count: +(process.env.RETRY_COUNT || 100),
     retry_count: 0,
     grpc_client: undefined,
     client_wait_time_ms: +(process.env.CLIENT_WAIT_TIME_MS || 5000),

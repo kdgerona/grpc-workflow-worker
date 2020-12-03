@@ -63,7 +63,7 @@ const implementation: MachineOptions<IWorkerContext, any> = {
         taskReceived: log('I received a task'),
         initSpawnRef: assign((context, event) => {
             const { client_id } = context
-            const { payload: { type, task_id } } = event
+            const { payload: { type }, task_id } = event
             const spawn_id = `${client_id}-${task_id}`
             const list_of_workers: any = workers
             const worker_key = type.toLowerCase()
@@ -75,11 +75,13 @@ const implementation: MachineOptions<IWorkerContext, any> = {
         sendDataToSpawnWorker: send(({ client_id }, event) => ({
             type: "START_WORK",
             client_id,
+            task_id: event.task_id,
             payload: event.payload
         }), { to: ({ client_id }, { task_id }) => `${client_id}-${task_id}` }),
         sendResponseDataToSpawnWorker: send(({ client_id }, event) => ({
             type: event.payload.type,
             client_id,
+            task_id: event.task_id,
             payload: event.payload.payload
         }), { to: ({ client_id }, { task_id }) => `${client_id}-${task_id}` })
     },
