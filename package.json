@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rm -rf ./dist && tsc",
-    "dev": "npm run build && ts-node ./src/index.ts"
+    "dev": "npm run build && ts-node ./src/index.ts",
+    "dev-js": "HOST=10.111.2.100 node dist/index.js"
   },
   "author": "",
   "license": "ISC",

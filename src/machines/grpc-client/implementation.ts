@@ -21,11 +21,11 @@ const implementation: MachineOptions<IGrpcClientContext, any> = {
         logClientStartError: log(`*** GRPC Client Start Error ***`),
         retryingLog: log((context) => `*** Retrying GRPC Client ${context.retry_count}/${context.max_retry_count} ***`),
         sendToParent: sendParent((_, { payload }: any) => ({
-            type: 'RECEIVED_DATA',
-            payload
+            ...payload
         })),
         logClientStreamError: log((_, { error }: any) => error),
         logStreamEnded: log('*** STREAM ENDED ***'),
+        eventLogs:  log((_:any, event: any) => `${event.type} event logs: ${JSON.stringify(event, null, 4)}`),
         streamToServer: ({ grpc_client }, { payload }) => grpc_client?.write(payload)
     },
     services: {
@@ -66,9 +66,13 @@ const implementation: MachineOptions<IGrpcClientContext, any> = {
         startClientService: ({ grpc_client }) => (send) => {
             grpc_client!.on('data', (payload: any) => {
                 console.log('Data: ', payload)
+                const parse_payload = {
+                    ...payload,
+                    payload: payload.payload ? JSON.parse(payload.payload) : ''
+                }
                 send({
                     type: 'SEND_MESSAGE_TO_PARENT',
-                    payload
+                    payload: parse_payload
                 })
             })
 

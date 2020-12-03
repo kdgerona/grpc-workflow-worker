@@ -13,14 +13,16 @@ interface IMachineContext {
     payload: IPayload,
     prev_payload: IPayload,
     data_history: Array<object>,
-    current_state?: string
+    current_state: string,
+    topic: string
 }
 
 interface IMachineSchema {
     states: {
         idle: {},
-        create_new_user: {},
-        // send_email: {},
+        get_user_by_email: {},
+        create_user: {},
+        send_email: {},
         success: {}
     }
 }
@@ -30,8 +32,8 @@ interface IMachineEvent {
     | "START_WORK"
     | "RESPONSE"
     | "REINITIALIZING"
-    | "CHECK_EXISTING_USER"
-    | "CREATE_NEW_USER"
+    | "GET_USER_BY_EMAIL"
+    | "CREATE_USER"
     | "SEND_EMAIL"
     | "TASK_DONE"
     payload?: IPayload

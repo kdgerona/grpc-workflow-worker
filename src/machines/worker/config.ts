@@ -15,7 +15,7 @@ const config: MachineConfig<IWorkerContext, IWorkerSchema, IWorkerEvents> = {
     context,
     states: {
         start: {
-            entry: "assignAllExistingWorker",
+            // entry: "assignAllExistingWorker",
             invoke: [
                 {
                     id: 'grpc-client',
@@ -23,24 +23,33 @@ const config: MachineConfig<IWorkerContext, IWorkerSchema, IWorkerEvents> = {
                 }
             ],
             on: {
-                RECEIVED_DATA: {
-                    actions: [
-                        'eventLogs',
-                        'sendReceivedEvent'
-                    ]
-                },
+                // RECEIVED_DATA: {
+                //     actions: [
+                //         // 'eventLogs',
+                //         'sendReceivedEvent'
+                //     ]
+                // },
                 CONNECTED: {
                     actions: [
                         'assignClientId',
                         'eventLogs',
-                        'notifyWorkflowWorkerReady'
+                        // 'notifyWorkflowWorkerReady'
                     ]
                 },
                 TASK: {
                     actions: [
                         'eventLogs',
                         'initSpawnRef',
+                        'acknowledgeTask',
+                        'workInProgress',
                         'sendDataToSpawnWorker'
+                    ]
+                },
+                DOMAIN_RESPONSE: {
+                    actions: [
+                        'contextLogs',
+                        'eventLogs',
+                        'sendResponseDataToSpawnWorker'
                     ]
                 },
                 PRODUCE_MESSAGE_TO_DOMAIN: {

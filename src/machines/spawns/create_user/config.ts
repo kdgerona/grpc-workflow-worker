@@ -23,7 +23,9 @@ const config: MachineConfig < IMachineContext, IMachineSchema, IMachineEvent > =
             email: '',
             success: false
         },
-        data_history: []
+        data_history: [],
+        current_state: 'idle',
+        topic: ''
     },
     initial: 'idle',
     states: {
@@ -35,34 +37,63 @@ const config: MachineConfig < IMachineContext, IMachineSchema, IMachineEvent > =
                         'eventLogs',
                         'contextLogs'
                     ],
-                    target: 'create_new_user'
+                    target: 'get_user_by_email'
+                    // target: 'success'
                 }
             }
         },
-        create_new_user: {
-            entry: 'produceMessageCreateNewUserToDomain',
+        get_user_by_email: {
+            entry: [
+                'setCurrentStateGetUserByEmail',
+                'requestToProduceMessageGetUserByEmailToDomain'
+            ],
             on: {
-                // SEND_EMAIL: {
-                //     actions: [
-                //         'saveDataToContext',
-                //         'eventLogs',
-                //         'contextLogs'
-                //     ],
-                //     target: 'send_email'
-                // }
+                GET_USER_BY_EMAIL: [
+                    {
+                        cond: 'isEmailExist',
+                        actions: [
+                            'saveDataToContext',
+                            'eventLogs',
+                            'contextLogs'
+                        ],
+                        target: 'create_user'
+                    },
+                    {
+                        actions: [
+                            'eventLogs'
+                        ],
+                        target: 'success'
+                    }
+                ]
+            }
+        },
+        create_user: {
+            entry: [
+                'setCurrentStateCreateUser',
+                'requestToProduceMessageCreateUserToDomain'
+            ],
+            on: {
+                SEND_EMAIL: {
+                    actions: [
+                        'saveDataToContext',
+                        'eventLogs',
+                        'contextLogs'
+                    ],
+                    target: 'send_email'
+                }
+            }
+        },
+        send_email: {
+            entry: [
+                'setCurrentStateSendEmail',
+                'requestToProduceMessageSendEmailToDomain'
+            ],
+            on: {
                 TASK_DONE: {
                     target: 'success'
                 }
             }
         },
-        // send_email: {
-        //     entry: 'produceMessageSendEmailToDomain',
-        //     on: {
-        //         TASK_DONE: {
-        //             target: 'success'
-        //         }
-        //     }
-        // },
         success: {
             entry: 'notifyParentWorkSuccess',
             type: 'final'
