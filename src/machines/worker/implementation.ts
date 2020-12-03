@@ -24,6 +24,13 @@ const implementation: MachineOptions<IWorkerContext, any> = {
                 client_id
             }
         }), { to: 'grpc-client', delay: 3000 }),
+        sendDoneDelay: send(({client_id}) => ({
+            type: 'STREAM_TO_SERVER',
+            payload: {
+                type: 'TASK_DONE',
+                client_id
+            }
+        }), { to: 'grpc-client', delay: 3000 }),
     },
     services: {
         initGrpcClient: GrpcClient

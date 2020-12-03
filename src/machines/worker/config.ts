@@ -27,13 +27,14 @@ const config: MachineConfig<IWorkerContext, IWorkerSchema, IWorkerEvents> = {
                 CONNECTED: {
                     actions: [
                         'assignClientId',
-                        'sendReady'
+                        // 'sendReady'
                     ]
                 },
                 TASK: {
                     actions: [
                         'taskReceived',
-                        'sendReadyDelay'
+                        // 'sendReadyDelay'
+                        'sendDoneDelay'
                     ]
                 }
             }
