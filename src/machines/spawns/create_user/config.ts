@@ -38,17 +38,18 @@ const config: MachineConfig < IMachineContext, IMachineSchema, IMachineEvent > =
                         'contextLogs'
                     ],
                     target: 'get_user_by_email'
-                    // target: 'success'
+                    // target: 'send_email'
                 }
             }
         },
         get_user_by_email: {
             entry: [
                 'setCurrentStateGetUserByEmail',
-                'requestToProduceMessageGetUserByEmailToDomain'
+                'requestToProduceMessageGetUserByEmailToDomain',
+                //'notifyParentForCurrentState'
             ],
             on: {
-                GET_USER_BY_EMAIL: [
+                TASK_DONE: [
                     {
                         cond: 'isEmailExist',
                         actions: [
@@ -70,10 +71,11 @@ const config: MachineConfig < IMachineContext, IMachineSchema, IMachineEvent > =
         create_user: {
             entry: [
                 'setCurrentStateCreateUser',
-                'requestToProduceMessageCreateUserToDomain'
+                'requestToProduceMessageCreateUserToDomain',
+                //'notifyParentForCurrentState'
             ],
             on: {
-                SEND_EMAIL: {
+                TASK_DONE: {
                     actions: [
                         'saveDataToContext',
                         'eventLogs',
@@ -86,7 +88,8 @@ const config: MachineConfig < IMachineContext, IMachineSchema, IMachineEvent > =
         send_email: {
             entry: [
                 'setCurrentStateSendEmail',
-                'requestToProduceMessageSendEmailToDomain'
+                'requestToProduceMessageSendEmailToDomain',
+                //'notifyParentForCurrentState'
             ],
             on: {
                 TASK_DONE: {

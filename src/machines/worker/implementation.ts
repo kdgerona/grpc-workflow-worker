@@ -37,7 +37,7 @@ const implementation: MachineOptions<IWorkerContext, any> = {
                 task_id,
                 payload: {
                     success: true,
-                    message: 'working'
+                    message: 'still working'
                 }
             }
         }), { to: 'grpc-client' }),
@@ -51,6 +51,13 @@ const implementation: MachineOptions<IWorkerContext, any> = {
                     success: true,
                     message: 'task acknowledge'
                 }
+            }
+        }), { to: 'grpc-client' }),
+        taskCompleted: send(({ client_id }, event) => ({
+            type: "STREAM_TO_SERVER",
+            payload: {
+                ...event.payload,
+                client_id
             }
         }), { to: 'grpc-client' }),
         sendReceivedEvent: send((_, event) => ({
@@ -78,12 +85,7 @@ const implementation: MachineOptions<IWorkerContext, any> = {
             task_id: event.task_id,
             payload: event.payload
         }), { to: ({ client_id }, { task_id }) => `${client_id}-${task_id}` }),
-        sendResponseDataToSpawnWorker: send(({ client_id }, event) => ({
-            type: event.payload.type,
-            client_id,
-            task_id: event.task_id,
-            payload: event.payload.payload
-        }), { to: ({ client_id }, { task_id }) => `${client_id}-${task_id}` })
+        sendResponseDataToSpawnWorker: send((_, event) => event, { to: (_, { task_id, client_id }) => `${client_id}-${task_id}` })
     },
     services: {
         initGrpcClient: GrpcClient

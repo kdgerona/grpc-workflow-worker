@@ -45,7 +45,10 @@ const config: MachineConfig<IWorkerContext, IWorkerSchema, IWorkerEvents> = {
                         'sendDataToSpawnWorker'
                     ]
                 },
-                DOMAIN_RESPONSE: {
+                WORKING_IN_PROGRESS: {
+                    actions: ['workInProgress']
+                },
+                TASK_DONE: {
                     actions: [
                         'contextLogs',
                         'eventLogs',
@@ -56,6 +59,13 @@ const config: MachineConfig<IWorkerContext, IWorkerSchema, IWorkerEvents> = {
                     actions: [
                         "eventLogs",
                         "produceMessage"
+                    ]
+                },
+                TASK_COMPLETE: {
+                    actions: [
+                        'contextLogs',
+                        'eventLogs',
+                        'taskCompleted'
                     ]
                 }
             }

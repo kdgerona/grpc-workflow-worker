@@ -22,5 +22,6 @@ export interface IWorkerEvents {
         | 'WORK_PROGRESS'
         | 'TASK_DONE'
         | 'PRODUCE_MESSAGE_TO_DOMAIN'
-        | 'DOMAIN_RESPONSE'
+        | 'TASK_COMPLETE'
+        | 'WORKING_IN_PROGRESS'
 }
