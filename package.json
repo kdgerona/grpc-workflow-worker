@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "dev": "npm run build && ts-node ./src/index.ts",
+    "dev": "HOST=10.111.2.100 node dist/index.js",
     "dev-js": "HOST=10.111.2.100 node dist/index.js"
   },
   "author": "",

@@ -116,16 +116,18 @@ const implementation: MachineOptions < IMachineContext, IMachineEvent > = {
             }
         }),
         notifyParentWorkSuccess: sendParent(({
-            payload,
             task_id
-        }) => ({
-            type: "TASK_COMPLETE",
-            payload: {
+        }, { payload }: any) => {
+            const parsed_payload = JSON.parse(payload)
+            return {
                 type: "TASK_COMPLETE",
-                task_id,
-                payload
+                payload: {
+                    type: "TASK_COMPLETE",
+                    task_id,
+                    payload: parsed_payload.result
+                }
             }
-        }))
+        })
     },
     services: {},
     delays: {},
@@ -133,7 +135,7 @@ const implementation: MachineOptions < IMachineContext, IMachineEvent > = {
     guards: {
         isEmailExist: (_, { payload = {} }: any) => {
             const parse_payload = JSON.parse(payload)
-            return parse_payload.result.data.email
+            return parse_payload.result ? parse_payload.result.email : false
         }
     }
 }

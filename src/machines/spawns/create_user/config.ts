@@ -53,17 +53,17 @@ const config: MachineConfig < IMachineContext, IMachineSchema, IMachineEvent > =
                     {
                         cond: 'isEmailExist',
                         actions: [
+                            'eventLogs'
+                        ],
+                        target: 'success'
+                    },
+                    {   
+                        actions: [
                             'saveDataToContext',
                             'eventLogs',
                             'contextLogs'
                         ],
                         target: 'create_user'
-                    },
-                    {
-                        actions: [
-                            'eventLogs'
-                        ],
-                        target: 'success'
                     }
                 ]
             }
@@ -81,7 +81,7 @@ const config: MachineConfig < IMachineContext, IMachineSchema, IMachineEvent > =
                         'eventLogs',
                         'contextLogs'
                     ],
-                    target: 'send_email'
+                    target: 'success'
                 }
             }
         },

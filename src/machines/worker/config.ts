@@ -41,12 +41,14 @@ const config: MachineConfig<IWorkerContext, IWorkerSchema, IWorkerEvents> = {
                         'eventLogs',
                         'initSpawnRef',
                         'acknowledgeTask',
-                        'workInProgress',
+                        // 'workInProgress',
                         'sendDataToSpawnWorker'
                     ]
                 },
                 WORKING_IN_PROGRESS: {
-                    actions: ['workInProgress']
+                    actions: [
+                        // 'workInProgress'
+                    ]
                 },
                 TASK_DONE: {
                     actions: [
