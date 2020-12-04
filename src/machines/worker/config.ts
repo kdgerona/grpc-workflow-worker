@@ -67,7 +67,8 @@ const config: MachineConfig<IWorkerContext, IWorkerSchema, IWorkerEvents> = {
                     actions: [
                         'contextLogs',
                         'eventLogs',
-                        'taskCompleted'
+                        'taskCompleted',
+                        'removeSpawnRef'
                     ]
                 }
             }
@@ -75,4 +76,4 @@ const config: MachineConfig<IWorkerContext, IWorkerSchema, IWorkerEvents> = {
     }
 }
 
-export default config
+export default config 
