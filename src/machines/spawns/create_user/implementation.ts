@@ -44,29 +44,6 @@ const implementation: MachineOptions < IMachineContext, IMachineEvent > = {
             ],
             task_id
         })),
-        // notifyParentForCurrentState: sendParent((ctx, { payload: evt_payload = {} }) => {
-        //     const {
-        //         topic,
-        //         task_id,
-        //         client_id
-        //     } = ctx
-        //     return {
-        //         type: "WORKING_IN_PROGRESS",
-        //         topic,
-        //         task_id,
-        //         payload: {
-        //             type: "STREAM_TO_SERVER",
-        //             payload: {
-        //                 client_id,
-        //                 task_id,
-        //                 payload: {
-        //                     success: true,
-        //                     message: 'still working'
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }),
         requestToProduceMessageGetUserByEmailToDomain: sendParent((ctx, { payload: evt_payload = {} }) => {
             const {
                 payload,
