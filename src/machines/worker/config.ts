@@ -41,12 +41,14 @@ const config: MachineConfig<IWorkerContext, IWorkerSchema, IWorkerEvents> = {
                         'eventLogs',
                         'initSpawnRef',
                         'acknowledgeTask',
-                        'workInProgress',
+                        // 'workInProgress',
                         'sendDataToSpawnWorker'
                     ]
                 },
                 WORKING_IN_PROGRESS: {
-                    actions: ['workInProgress']
+                    actions: [
+                        // 'workInProgress'
+                    ]
                 },
                 TASK_DONE: {
                     actions: [
@@ -65,7 +67,8 @@ const config: MachineConfig<IWorkerContext, IWorkerSchema, IWorkerEvents> = {
                     actions: [
                         'contextLogs',
                         'eventLogs',
-                        'taskCompleted'
+                        'taskCompleted',
+                        'removeSpawnRef'
                     ]
                 }
             }
@@ -73,4 +76,4 @@ const config: MachineConfig<IWorkerContext, IWorkerSchema, IWorkerEvents> = {
     }
 }
 
-export default config
+export default config 

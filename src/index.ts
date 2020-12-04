@@ -1,6 +1,5 @@
 import { interpret } from 'xstate'
 import WorkerMachine from './machines/worker'
-
 const workerService = interpret(WorkerMachine)
 workerService.onTransition(({ value, event, context }) => {
     // console.log("@CURREN_EVENT: ", event);
