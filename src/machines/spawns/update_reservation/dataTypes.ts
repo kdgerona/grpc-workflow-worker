@@ -21,7 +21,7 @@ interface IMachineContext {
 interface IMachineSchema {
     states: {
         idle: {},
-        get_component: {}
+        update_reservation: {},
         success: {}
     }
 }

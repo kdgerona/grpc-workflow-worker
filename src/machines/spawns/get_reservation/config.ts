@@ -9,7 +9,7 @@ import {
 } from './dataTypes'
 
 const config: MachineConfig < IMachineContext, IMachineSchema, IMachineEvent > = {
-    id: 'create_reservation',
+    id: 'get_reservation',
     context: {
         payload: {
             first_name: '',
@@ -37,15 +37,15 @@ const config: MachineConfig < IMachineContext, IMachineSchema, IMachineEvent > =
                         'eventLogs',
                         'contextLogs'
                     ],
-                    target: 'create_reservation'
+                    target: 'get_reservation'
                     // target: 'send_email'
                 }
             }
         },
-        create_reservation: {
+        get_reservation: {
             entry: [
-                'setCurrentStateCreateReservation',
-                'requestToProduceMessageCreateReservationToDomain',
+                'setCurrentStateGetReservation',
+                'requestToProduceMessageGetReservationToDomain',
                 //'notifyParentForCurrentState'
             ],
             on: {

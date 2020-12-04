@@ -21,9 +21,7 @@ interface IMachineContext {
 interface IMachineSchema {
     states: {
         idle: {},
-        get_user_by_email: {},
-        create_user: {},
-        send_email: {},
+        create_reservation: {},
         success: {}
     }
 }
@@ -33,8 +31,6 @@ interface IMachineEvent {
     | "START_WORK"
     | "RESPONSE"
     | "REINITIALIZING"
-    | "GET_USER_BY_EMAIL"
-    | "CREATE_USER"
     | "SEND_EMAIL"
     | "TASK_DONE"
     payload?: IPayload
