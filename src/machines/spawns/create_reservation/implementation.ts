@@ -51,16 +51,18 @@ const implementation: MachineOptions < IMachineContext, IMachineEvent > = {
             }
         }),
         notifyParentWorkSuccess: sendParent(({
-            payload,
             task_id
-        }) => ({
-            type: "TASK_COMPLETE",
-            payload: {
+        }, { payload }: any) => {
+            const parsed_payload = JSON.parse(payload)
+            return {
                 type: "TASK_COMPLETE",
-                task_id,
-                payload
+                payload: {
+                    type: "TASK_COMPLETE",
+                    task_id,
+                    payload: parsed_payload.result
+                }
             }
-        }))
+        })
     },
     services: {},
     delays: {},
