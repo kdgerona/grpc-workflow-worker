@@ -9,7 +9,7 @@ import {
 } from './dataTypes'
 
 const config: MachineConfig < IMachineContext, IMachineSchema, IMachineEvent > = {
-    id: 'create_user',
+    id: 'create_reservation',
     context: {
         payload: {
             first_name: '',
@@ -42,36 +42,10 @@ const config: MachineConfig < IMachineContext, IMachineSchema, IMachineEvent > =
                 }
             }
         },
-        get_user_by_email: {
+        create_reservation: {
             entry: [
-                'setCurrentStateGetUserByEmail',
-                'requestToProduceMessageGetUserByEmailToDomain',
-                //'notifyParentForCurrentState'
-            ],
-            on: {
-                TASK_DONE: [
-                    {
-                        cond: 'isEmailExist',
-                        actions: [
-                            'saveDataToContext',
-                            'eventLogs',
-                            'contextLogs'
-                        ],
-                        target: 'create_user'
-                    },
-                    {
-                        actions: [
-                            'eventLogs'
-                        ],
-                        target: 'success'
-                    }
-                ]
-            }
-        },
-        create_user: {
-            entry: [
-                'setCurrentStateCreateUser',
-                'requestToProduceMessageCreateUserToDomain',
+                'setCurrentStateCreateReservation',
+                'requestToProduceMessageCreateReservationToDomain',
                 //'notifyParentForCurrentState'
             ],
             on: {
@@ -81,18 +55,6 @@ const config: MachineConfig < IMachineContext, IMachineSchema, IMachineEvent > =
                         'eventLogs',
                         'contextLogs'
                     ],
-                    target: 'send_email'
-                }
-            }
-        },
-        send_email: {
-            entry: [
-                'setCurrentStateSendEmail',
-                'requestToProduceMessageSendEmailToDomain',
-                //'notifyParentForCurrentState'
-            ],
-            on: {
-                TASK_DONE: {
                     target: 'success'
                 }
             }
