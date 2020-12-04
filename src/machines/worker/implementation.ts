@@ -3,6 +3,7 @@ import GrpcClient from '../grpc-client'
 import { IWorkerContext } from './interfaces'
 const { log } = actions
 const uuid = require('uuid')
+const __ = require('lodash')
 import workers from '../spawns'
 const implementation: MachineOptions<IWorkerContext, any> = {
     actions: {
@@ -60,6 +61,12 @@ const implementation: MachineOptions<IWorkerContext, any> = {
                 client_id
             }
         }), { to: 'grpc-client' }),
+        removeSpawnRef: assign((ctx, { task_id }) => {
+            const { client_id } = ctx
+            return {
+                ...__.omit(ctx, `${client_id}-${task_id}`),
+            }
+        }),
         sendReceivedEvent: send((_, event) => ({
             ...event.payload
         })),
