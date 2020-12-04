@@ -17,7 +17,7 @@ const implementation: MachineOptions < IMachineContext, IMachineEvent > = {
         setCurrentStateGetReservation: assign((ctx) => ({ 
             ...ctx,
             current_state: 'get_reservation',
-            topic: 'USER'
+            topic: 'RESERVATION'
         })),
         saveDataToContext: assign((ctx, {
             payload,

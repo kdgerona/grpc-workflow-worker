@@ -17,7 +17,7 @@ const implementation: MachineOptions < IMachineContext, IMachineEvent > = {
         setCurrentStateGridReservation: assign((ctx) => ({ 
             ...ctx,
             current_state: 'grid_reservation',
-            topic: 'USER'
+            topic: 'RESERVATION'
         })),
         saveDataToContext: assign((ctx, {
             payload,
