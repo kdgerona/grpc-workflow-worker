@@ -1,12 +1,12 @@
-import { MachineConfig } from 'xstate'
+import { MachineConfig, sendParent } from 'xstate'
 import { IGrpcClientContext, IGrpcClientSchema, IGrpcClientEvents} from './interfaces'
 
 const context: IGrpcClientContext = {
-    // host: process.env.HOST || 'localhost',
-    host: process.env.HOST || '10.111.2.100',
+    // host: process.env.HOST || 'localhost' || '10.111.2.100',
+    host: process.env.HOST || 'localhost',
     port: +(process.env.PORT || 50051),
     proto_path: process.env.PROTO_PATH || `${__dirname}/protos/connection.proto`,
-    max_retry_count: +(process.env.RETRY_COUNT || 5),
+    max_retry_count: +(process.env.RETRY_COUNT || 100),
     retry_count: 0,
     grpc_client: undefined,
     client_wait_time_ms: +(process.env.CLIENT_WAIT_TIME_MS || 5000),
@@ -57,9 +57,22 @@ const config: MachineConfig<IGrpcClientContext, IGrpcClientSchema, IGrpcClientEv
                     actions: ['logStreamEnded']
                 },
                 STREAM_TO_SERVER: {
-                    actions: ['streamToServer']
+                    actions: [
+                        'eventLogs',
+                        'streamToServer',
+                        // // // testing
+                        // sendParent({ type: 'TASK' , payload: {
+                        //     type: 'CREATE_USER',
+                        //     task_id: 'task-id-1',
+                        //     payload: {
+                        //         first_name: 'Test First name',
+                        //         last_name: 'Test Last name',
+                        //         email: 'test@gmail.com'
+                        //     }
+                        // }}),
+                    ]
                 }
-            }
+            },
         },
         retry: {
             after: {
