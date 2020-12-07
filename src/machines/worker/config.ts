@@ -20,6 +20,10 @@ const config: MachineConfig<IWorkerContext, IWorkerSchema, IWorkerEvents> = {
                 {
                     id: 'grpc-client',
                     src: 'initGrpcClient'
+                },
+                {
+                    id: 'grpc-server',
+                    src: 'initGrpcServer'
                 }
             ],
             on: {

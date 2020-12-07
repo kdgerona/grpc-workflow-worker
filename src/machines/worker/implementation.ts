@@ -1,10 +1,12 @@
 import { MachineOptions, actions, send, assign, spawn } from 'xstate'
 import GrpcClient from '../grpc-client'
+import GrpcServer from '../grpc-server'
 import { IWorkerContext } from './interfaces'
 const { log } = actions
 const uuid = require('uuid')
 const __ = require('lodash')
 import workers from '../spawns'
+
 const implementation: MachineOptions<IWorkerContext, any> = {
     actions: {
         eventLogs:  log((_:any, event: any) => `${event.type} event logs: ${JSON.stringify(event, null, 4)}`),
@@ -95,7 +97,8 @@ const implementation: MachineOptions<IWorkerContext, any> = {
         sendResponseDataToSpawnWorker: send((_, event) => event, { to: (_, { task_id, client_id }) => `${client_id}-${task_id}` })
     },
     services: {
-        initGrpcClient: GrpcClient
+        initGrpcClient: GrpcClient,
+        initGrpcServer: GrpcServer,
     },
     guards: {},
     activities: {},
